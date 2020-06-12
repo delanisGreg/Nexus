@@ -15,7 +15,7 @@ pipeline {
 		stage('Push artifac') {
 			steps ('PUSHING to Nexus'){
 				withCredentials([string(credentialsId: 'Nexus_1', variable: 'Nexus_1')]) {
-					sh "curl -v -u admin -p ${Nexus_1} --upload-file dist/helloworls-0.0.1.tar.gz http://54.191.157.240:8081/repository/Py_HelloWorld/"
+					sh "curl -v -u admin:${Nexus_1} --upload-file dist/helloworls-0.0.1.tar.gz http://54.191.157.240:8081/repository/Py_HelloWorld/"
 				}
 			}
 		}
