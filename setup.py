@@ -6,4 +6,5 @@ setup(
         description='Hello!',
         py_module=["hello"],
         package_dir={'':'src'},
+        setup_requires=['wheel'],
 )
