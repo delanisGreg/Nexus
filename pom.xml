@@ -1,10 +1,48 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>Nexus_py</groupId>
-    <artifactId>simple-app</artifactId>
+    <groupId>Hello_py</groupId>
+    <artifactId>helloworls-0.0.1</artifactId>
     <packaging>war</packaging>
-    <version>3.0.0-SNAPSHOT</version>
-    <name>simple-app</name>
+    <version>0.0.1-SNAPSHOT</version>
+    
+   <profiles>
+    <profile>
+      <id>python-builder</id>
+      <activation>
+        <property>
+          <name>PYTHON_BINDINGS</name>
+        </property>
+      </activation>
+      <properties>
+        <python_compile_phase>compile</python_compile_phase>
+      </properties>
+    </profile>
+    <profile>
+      <id>python-builder-en</id>
+      <activation>
+        <property>
+          <name>env.PYTHON_BINDINGS</name>
+        </property>
+      </activation>
+      <properties>
+        <python_compile_phase>compile</python_compile_phase>
+      </properties>
+    </profile>
+    <profile>
+      <id>jenkins-builder</id>
+      <activation>
+        <property>
+          <name>env.http://34.216.50.32:8080</name>
+        </property>
+      </activation>
+      <properties>
+        <python_compile_phase>compile</python_compile_phase>
+      </properties>
+    </profile>
+  </profiles>
+    
+  
+    <name>hello</name>
     <url>http://maven.apache.org</url>
     <dependencies><dependency>
     <groupId>junit</groupId>
@@ -13,4 +51,134 @@
     <scope>test</scope>
     </dependency>
     </dependencies>
+</project>
+
+<build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <plugin>
+       <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+	    <id>write-python-version</id>
+            <goals><goal>regex-property</goal></goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <name>python_version</name>
+              <regex>-SNAPSHOT</regex>
+              <value>${project.version}</value>
+              <replacement>\.preview</replacement>
+              <failIfNoMatch>false</failIfNoMatch>
+            </configuration>
+          </execution>
+          <execution>
+	    <id>add-generated-sources</id>
+            <goals><goal>add-source</goal></goals>
+            <phase>compile</phase>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <mkdir dir="${project.build.directory}/generated-sources/python/${python_package}"/>
+                <mkdir dir="${project.build.directory}/generated-sources/java"/>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <id>generate-bindings</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>protoc</executable>
+              <workingDirectory>${basedir}</workingDirectory>
+              <arguments>
+                <argument>--proto_path=${basedir}/src/main/resources</argument>
+                <argument>--java_out=${project.build.directory}/generated-sources/java</argument>
+                <argument>--python_out=${project.build.directory}/generated-sources/python/${python_package}</argument>
+                <argument>${basedir}/src/main/resources/*.proto</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-package</id>
+            <phase>${python_compile_phase}</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>python</executable>
+              <workingDirectory>${project.build.directory}/generated-sources/python</workingDirectory>
+              <arguments>
+                <argument>setup.py</argument>
+                <argument>sdist</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <resources>
+      <resource>
+        <directory>./</directory>
+        <includes>
+          <include>setup.py</include>
+        </includes>
+        <directory>src/</directory>
+       `<includes>
+          <include>hello.py</include>
+        </includes>
+        <targetPath>${project.build.directory}/python</targetPath>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes><include>*.proto</include></includes>
+        <targetPath>${project.build.directory}/classes</targetPath>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+  </build>
+
+<dependencies>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>2.5.0</version>
+    </dependency>
+  </dependencies>
 </project>
