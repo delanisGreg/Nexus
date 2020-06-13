@@ -17,7 +17,7 @@ RUN apt-get install -qy python3-flask
 RUN pip install --upgrade pip
 RUN pip3 install flask-restful
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/
 ADD app.py /usr/src/hello.py
 
 CMD [ "python", "hello.py", "0.0.0.0" ]
