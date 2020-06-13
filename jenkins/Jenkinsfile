@@ -31,7 +31,8 @@ pipeline {
 			nexusArtifactUploader artifacts: [
 				[
 					artifactId: 'helloworls',
-					classifier: '', file: 'Hello.tar.gz',
+					classifier: '', 
+					file: 'helloworls-0.0.1.tar.gz',
 					type: 'tar.gz'
 				]
 			], 
