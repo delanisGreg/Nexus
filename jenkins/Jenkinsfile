@@ -27,7 +27,8 @@ pipeline {
 					}
 				}
 			}
-		stage('Build'){
+		stage('upload'){
+			steps{
 			nexusArtifactUploader artifacts: [
 				[
 					artifactId: 'helloworls',
@@ -42,6 +43,7 @@ pipeline {
 			protocol: 'http',
 			repository: 'Nexus_Maven_Py_2',
 			version: '0.0.1'
+			}
 		}
 	}
 }
