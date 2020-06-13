@@ -2,9 +2,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>Hello_py</groupId>
     <artifactId>helloworls-0.0.1</artifactId>
-    <packaging>war</packaging>
+    <packaging>tar.gz</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    
+    <name>Hello</name>
+    <url>http://maven.apach.org</url>
+	
    <profiles>
     <profile>
       <id>python-builder</id>
