@@ -3,7 +3,7 @@
     <groupId>Hello_py</groupId>
     <artifactId>helloworls-0.0.1</artifactId>
     <packaging>tar.gz</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Hello</name>
     <url>http://maven.apach.org</url>
 	
