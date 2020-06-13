@@ -27,7 +27,6 @@ pipeline {
 					}
 				}
 			}
-		}
 		stage('Build'){
 			nexusArtifactUploader artifacts: [
 				[
@@ -44,6 +43,5 @@ pipeline {
 			repository: 'Nexus_Maven_Py_2',
 			version: '0.0.1'
 		}
-			
 	}
 }
