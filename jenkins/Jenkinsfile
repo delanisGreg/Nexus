@@ -2,22 +2,48 @@ pipeline {
 	agent {
 		label 'master'
 		}
+	tools {
+        // Note: this should match with the tool name configured in your jenkins instance (JENKINS_URL/configureTools/)
+        maven 'maven3'
+    	}
+	environment {
+        // This can be nexus3 or nexus2
+        NEXUS_VERSION = "nexus3"
+        // This can be http or https
+        NEXUS_PROTOCOL = "http"
+        // Where your Nexus is running
+        NEXUS_URL = "54.191.157.240:8081"
+        // Repository where we will upload the artifact
+        NEXUS_REPOSITORY = "Py_HelloWorld"
+        // Jenkins credential id to authenticate to Nexus OSS
+        NEXUS_CREDENTIAL_ID = "Nexus3"
+	}
 	stages {
-		stage("Create artifact") {
+		stage('Build'){
 			steps ('Build') {
-				echo "========= start building artifact ========="
+					echo "========= start building artifact ========="
 				dir ('./') {
 					sh 'python3 setup.py sdist bdist_wheel'
 					}
 				}
 			}
-	
-		stage('Push artifac') {
-			steps ('PUSHING to Nexus'){
-				withCredentials([string(credentialsId: 'Nexus_1', variable: 'Nexus_1')]) {
-					sh "curl -v -u admin:${Nexus_1} --upload-file dist/helloworls-0.0.1.tar.gz http://54.191.157.240:8081/repository/Py_HelloWorld/"
-				}
-			}
 		}
-  }
+		stage('Build'){
+			nexusArtifactUploader artifacts: [
+				[
+					artifactId: 'helloworls',
+					classifier: '', file: 'Hello.tar.gz',
+					type: 'tar.gz'
+				]
+			], 
+			credentialsId: 'nexus3',
+			groupId: 'Hello_py',
+			nexusUrl: '54.191.157.240:8081',
+			nexusVersion: 'nexus3',
+			protocol: 'http',
+			repository: 'Nexus_Maven_Py_2',
+			version: '0.0.1'
+		}
+			
+	}
 }
