@@ -75,15 +75,6 @@ pipeline {
 			}
 		}
 		
-		stage("Create docker image") {
-			steps ('Build image for docker') {
-				echo "========= start building image ========="
-//				app = docker.build("./docker/toolbox")
-				dir ('./') {
-					sh 'docker build -t gregdelanis/hello_py:2.0 .'
-					}
-				}
-			}
 		}
 
 }
