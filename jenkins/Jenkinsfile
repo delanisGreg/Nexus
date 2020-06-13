@@ -18,6 +18,14 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "Nexus3"
 	}
 	stages {
+		stage("Create docker image") {
+			steps ('Build') {
+				echo "========= start building image ========="
+				dir ('./src') {
+					sh 'docker build -t gregdelanis/hello_py:2.0 .'
+				}
+			}
+		}
 		stage('Build'){
 			steps ('Build') {
 					echo "========= start building artifact ========="
@@ -45,5 +53,38 @@ pipeline {
 			version: '0.0.2'
 			}
 		}
+        	
+		stage("get artifact from nexus") {
+			steps ('artifact from nexus') {
+				withCredentials([string(credentialsId: 'nexus_1', variable: 'Nexus_1')]) {
+					
+					script {
+						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/0.0.2/helloworls-0.0.2.tar.gz"
+						unzip = "tar -xf helloworld.tar.gz"
+						//dockerbuild = "docker build -t gregdelanis/hello_py:2.0 ."
+						dockerRun = "sudo docker run -p 80:5000 -d --name hello_py gregdelanis/hellp_py:2.0"
+						echo "========= downloading artifacts unzip and run========="
+						sshagent(['DockerServer']) {	
+							sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.22.171 ${downloadartifact}"
+							sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.22.171 ${downloadartifact}"
+							//sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.22.171 ${dockerbuild}"
+							sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.22.171 ${dockerRun}"
+						}
+					}
+				}
+			}
+		}
+		
+		stage("Create docker image") {
+			steps ('Build image for docker') {
+				echo "========= start building image ========="
+//				app = docker.build("./docker/toolbox")
+				dir ('./') {
+					sh 'docker build -t gregdelanis/hello_py:2.0 .'
+					}
+				}
+			}
+		}
+
 	}
 }
