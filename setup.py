@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
         name='helloworls',
-        version='0.0.1',
+        version='0.0.2',
         description='Hello!',
         py_module=["hello"],
-        package_dir={'':'src'},
-        setup_requires=['wheel'],
+        packages=['src'],
+        package_dir={'src':'src'},
 )
