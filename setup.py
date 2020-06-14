@@ -8,7 +8,7 @@ setup(
         py_module=["hello"],
         packages=['src'],
         package_data={
-        'src': ['dockerfile'],
+        'src': ['Dockerfile'],
         },
         package_dir={'src':'src'},
 )
