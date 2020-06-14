@@ -6,6 +6,7 @@ app = Flask(__name__)
 def hello():
 	return jsonify(
 {"about": "Hello there!"},
+{"newline": "this is a new line!"},
 )
 
 if __name__ == '__main__':
