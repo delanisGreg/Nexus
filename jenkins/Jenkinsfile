@@ -18,14 +18,6 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "Nexus3"
 	}
 	stages {
-		stage("Create docker image") {
-			steps ('Build') {
-				echo "========= start building image ========="
-				dir ('./src') {
-					sh 'docker build -t gregdelanis/hello_py:1.0 .'
-				}
-			}
-		}
 		stage('Build'){
 			steps ('Build') {
 					echo "========= start building artifact ========="
@@ -40,7 +32,7 @@ pipeline {
 				[
 					artifactId: 'helloworls',
 					classifier: '', 
-					file: 'dist/helloworls-0.0.3.tar.gz',
+					file: 'dist/helloworls-0.0.4.tar.gz',
 					type: 'tar.gz'
 				]
 			], 
@@ -50,7 +42,7 @@ pipeline {
 			nexusVersion: 'nexus3',
 			protocol: 'http',
 			repository: 'Nexus_Maven_Py_2',
-			version: '0.0.3'
+			version: '0.0.4'
 			}
 		}
         	
@@ -59,7 +51,7 @@ pipeline {
 				withCredentials([string(credentialsId: 'Nexus_1', variable: 'Nexus_1')]) {
 					
 					script {
-						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/0.0.3/helloworls-0.0.3.tar.gz"
+						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/0.0.4/helloworls-0.0.4.tar.gz"
 						unzip = "tar -xf helloworld.tar.gz"
 						dockerRun = "sudo docker run -p 80:5000 -d --name hello_py gregdelanis/hello_py:1.0"
 						dockerbuild = "cd helloworls-0.0.4/src/ && sudo sudo docker -t gregdelanis/hello_py:1.0 ."
