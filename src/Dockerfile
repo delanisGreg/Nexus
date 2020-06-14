@@ -18,6 +18,6 @@ RUN pip install --upgrade pip
 RUN pip3 install flask-restful
 
 WORKDIR /usr/src/
-ADD hello.py /usr/src/app/hello.py
+ADD helloworls-0.0.4/src/hello.py /usr/src/app/hello.py
 
 CMD [ "python", "hello.py", "0.0.0.0" ]
