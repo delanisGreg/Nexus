@@ -56,7 +56,7 @@ pipeline {
         	
 		stage("get artifact from nexus") {
 			steps ('artifact from nexus') {
-				withCredentials([string(credentialsId: 'nexus_1', variable: 'Nexus_1')]) {
+				withCredentials([string(credentialsId: 'Nexus_1', variable: 'Nexus_1')]) {
 					
 					script {
 						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/0.0.3/helloworls-0.0.3.tar.gz"
