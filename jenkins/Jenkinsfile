@@ -62,7 +62,7 @@ pipeline {
 						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/0.0.3/helloworls-0.0.3.tar.gz"
 						unzip = "tar -xf helloworld.tar.gz"
 						//dockerbuild = "docker build -t gregdelanis/hello_py:2.0 ."
-						dockerRun = "sudo docker run -p 80:5000 -d --name hello_py gregdelanis/hellp_py:3.0"
+						dockerRun = "sudo docker run -p 80:5000 -d --name hello_py gregdelanis/hello_py:3.0"
 						echo "========= downloading artifacts unzip and run========="
 						sshagent(['DockerServer']) {	
 							sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.22.171 ${downloadartifact}"
