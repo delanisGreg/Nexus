@@ -22,7 +22,7 @@ pipeline {
 			steps ('Build') {
 				echo "========= start building image ========="
 				dir ('./src') {
-					sh 'docker build -t gregdelanis/hello_py:2.0 .'
+					sh 'docker build -t gregdelanis/hello_py:1.0 .'
 				}
 			}
 		}
@@ -40,7 +40,7 @@ pipeline {
 				[
 					artifactId: 'helloworls',
 					classifier: '', 
-					file: 'dist/helloworls-0.0.2.tar.gz',
+					file: 'dist/helloworls-0.0.3.tar.gz',
 					type: 'tar.gz'
 				]
 			], 
@@ -50,7 +50,7 @@ pipeline {
 			nexusVersion: 'nexus3',
 			protocol: 'http',
 			repository: 'Nexus_Maven_Py_2',
-			version: '0.0.2'
+			version: '0.0.3'
 			}
 		}
         	
@@ -59,10 +59,10 @@ pipeline {
 				withCredentials([string(credentialsId: 'nexus_1', variable: 'Nexus_1')]) {
 					
 					script {
-						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/0.0.2/helloworls-0.0.2.tar.gz"
+						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/0.0.3/helloworls-0.0.3.tar.gz"
 						unzip = "tar -xf helloworld.tar.gz"
 						//dockerbuild = "docker build -t gregdelanis/hello_py:2.0 ."
-						dockerRun = "sudo docker run -p 80:5000 -d --name hello_py gregdelanis/hellp_py:2.0"
+						dockerRun = "sudo docker run -p 80:5000 -d --name hello_py gregdelanis/hellp_py:3.0"
 						echo "========= downloading artifacts unzip and run========="
 						sshagent(['DockerServer']) {	
 							sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.22.171 ${downloadartifact}"
