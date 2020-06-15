@@ -16,6 +16,8 @@ pipeline {
         NEXUS_REPOSITORY = "Py_HelloWorld"
         // Jenkins credential id to authenticate to Nexus OSS
         NEXUS_CREDENTIAL_ID = "Nexus3"
+	
+	VERSION = "1.0.2"
 	}
 	stages {
 		stage('Build'){
@@ -32,7 +34,7 @@ pipeline {
 				[
 					artifactId: 'helloworls',
 					classifier: '', 
-					file: 'dist/helloworls-1.0.1.tar.gz',
+					file: "dist/helloworls-${VERSION}.tar.gz",
 					type: 'tar.gz'
 				]
 			], 
@@ -42,7 +44,7 @@ pipeline {
 			nexusVersion: 'nexus3',
 			protocol: 'http',
 			repository: 'Nexus_Maven_Py_2',
-			version: '1.0.1'
+			version: "${VERSION}"
 			}
 		}
         	
@@ -51,10 +53,10 @@ pipeline {
 				withCredentials([string(credentialsId: 'Nexus_1', variable: 'Nexus_1')]) {
 					
 					script {
-						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/1.0.1/helloworls-1.0.1.tar.gz"
+						downloadartifact = "sudo curl -v -u admin:${Nexus_1} -o helloworld.tar.gz http://54.191.157.240:8081/repository/Nexus_Maven_Py_2/Hello_py/helloworls/${VERSION}/helloworls-${VERSION}.tar.gz"
 						unzip = "tar -xf helloworld.tar.gz"
 						dockerRun = "sudo docker run -p 80:5000 -d --name hello_py gregdelanis/hello_py:1.0"
-						dockerbuild = "sudo docker build -t gregdelanis/hello_py:1.0 -f helloworls-1.0.1/src/Dockerfile ."
+						dockerbuild = "sudo docker build -t gregdelanis/hello_py:1.0 -f helloworls-${VERSION}/src/Dockerfile ."
 						echo "========= downloading artifacts unzip and run========="
 						sshagent(['DockerServer']) {	
 							sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.22.171 ${downloadartifact}"
